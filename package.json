@@ -1,9 +1,9 @@
 {
-  "name": "vany-crud-component",
-  "version": "1.0.0",
-  "description": "this is crud component",
-  "author": "Prathyusha124",
-  "license": "MIT",
+  "name": "vany-crud-modal",
+  "version": "1.0.9",
+  "description": "This is crud Modal provide you to create simple Form UI with all crud opertions.",
+  "author": "V & Y Soft. Tech. Pvt. Ltd.",
+  "license": "ISC",
   "repository": "",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -57,5 +57,14 @@
   },
   "files": [
     "dist"
+  ],
+  "dependencies": {
+    "availity-reactstrap-validation": "^2.6.0",
+    "bootstrap": "^4.3.1",
+    "react-bootstrap": "^1.0.0-beta.12",
+    "reactstrap": "^8.0.1"
+  },
+  "keywords": [
+    "react","component","crud","vany","v2018y","vanysofttech","pvt","ltd"
   ]
 }
