@@ -14,7 +14,7 @@ export default class App extends Component {
   render () {
     const filed=[
       {apiKey:'cName',label:"Customer Name",type:"text",required:'required',errorMessage:"Enter Customer Name",placeholder:"Ex: vishva"},
-      {apiKey:'cSurname',label:"cSurname ",type:"text",required:'required',errorMessage:"Enter Customer Surname",placeholder:"Ex: jony"},
+      {apiKey:'cSurname',label:"Customer Surname ",type:"text",required:'required',errorMessage:"Enter Customer Surname",placeholder:"Ex: jony"},
       {apiKey:'cEmail',label:"Customer Email",type:"text",required:'required',errorMessage:"Enter Customer Email",placeholder:"Ex: admin@admin.com"}
   ]
 

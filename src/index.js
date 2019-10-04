@@ -118,10 +118,11 @@ export default class FormUI extends Component {
                     <strong id="contained-modal-title-vcenter"> {headername} </strong>
                 </ModalHeader>
                 <ModalBody>
+                <Container  className="justify-content-md-center">
                         <AvField type="hidden" name="foId" value={data[0][primaryKey]} required />
                         {this.props.fields && this.props.fields.map((field, key) => {
                             let fkey = field.apiKey && field.apiKey;
-                            return  <Row key={key}><AvField
+                            return  <Row key={key} xs={5}><AvField
                                 type={field.type}
                                 name={field.apiKey}
                                 value={fkey && data[0][fkey]}
@@ -131,6 +132,7 @@ export default class FormUI extends Component {
                                 required={field.required && field.required}
                             /> </Row>
                         })}
+                        </Container>
                 </ModalBody>
                 <ModalFooter>
                     <Button type="submit" variant={variantColor}>{buttonText}</Button> &nbsp; &nbsp;
