@@ -51,6 +51,7 @@ export default class FormUI extends Component {
                         <AvForm onSubmit={this.handelPostSubmit}>
                             {this.props.fields && this.props.fields.map((field, key) => {
                                 return <AvField
+                                    key={key}
                                     type={field.type}
                                     name={field.apiKey}
                                     label={field.label && `Enter ${field.label}`}
@@ -72,7 +73,7 @@ export default class FormUI extends Component {
             <Table responsive="sm">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>Sr. No</th>
                         {this.props.fields && this.props.fields.map((field, key) => { return <th>{field.label && field.label}</th> })}
                         <th colSpan={2}></th>
                     </tr>
@@ -87,6 +88,9 @@ export default class FormUI extends Component {
         let rows = data.map((singleRow, key) => {
             return <tr key={key}>
                 <td>{key}</td>
+                {this.props.fields && this.props.fields.map((field, key) => {
+                    return <td key={key}>{singleRow[field.apiKey]}</td>
+                })}
                 <td><Button onClick={() => this.setState({ updateModel: !this.state.updateModel, id: singleRow[primaryKey] })} >Edit</Button></td>
                 <td><Button onClick={() => this.setState({ deleteModel: !this.state.deleteModel, id: singleRow[primaryKey] })}>Delete</Button></td>
             </tr>
@@ -114,11 +118,10 @@ export default class FormUI extends Component {
                     <strong id="contained-modal-title-vcenter"> {headername} </strong>
                 </ModalHeader>
                 <ModalBody>
-                    <Row>
                         <AvField type="hidden" name="foId" value={data[0][primaryKey]} required />
                         {this.props.fields && this.props.fields.map((field, key) => {
                             let fkey = field.apiKey && field.apiKey;
-                            return <AvField
+                            return  <Row key={key}><AvField
                                 type={field.type}
                                 name={field.apiKey}
                                 value={fkey && data[0][fkey]}
@@ -126,9 +129,8 @@ export default class FormUI extends Component {
                                 placeholder={field.placeholder && field.placeholder}
                                 errorMessage={field.errorMessage && field.errorMessage}
                                 required={field.required && field.required}
-                            />
+                            /> </Row>
                         })}
-                    </Row>
                 </ModalBody>
                 <ModalFooter>
                     <Button type="submit" variant={variantColor}>{buttonText}</Button> &nbsp; &nbsp;
