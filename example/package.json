@@ -1,20 +1,24 @@
 {
-  "name": "vany-crud-component-example",
-  "homepage": "https://Prathyusha124.github.io/vany-crud-component",
+  "name": "vany-crud-mdoal-example",
+  "homepage": "https://v2018y.github.io/vany-crud-modal",
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "availity-reactstrap-validation": "^2.6.0",
+    "bootstrap": "^4.3.1",
     "prop-types": "^15.6.2",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
+    "react": "^16.10.2",
+    "react-bootstrap": "^1.0.0-beta.14",
+    "react-dom": "^16.10.2",
     "react-scripts": "^1.1.4",
-    "vany-crud-component": "file:.."
+    "reactstrap": "^8.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "postupdate": "npm link ../dist"
   }
 }
