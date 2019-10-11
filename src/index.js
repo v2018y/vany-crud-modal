@@ -5,19 +5,21 @@ import { FormGroup, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstra
 
 
 export default class FormUI extends Component {
-
     state = {
         deleteModel: false,
         updateModel: false,
         id: ''
     }
-    // This Method Handel GET Actions for Executing
+    // This Method Handel Get Actions for Executing
     componentDidMount = () => {
         this.props.getMethod && this.props.getMethod(this.props.token)
     }
     // This Method Handel Post Actions for Executing
     handelPostSubmit = (event, errors, values) => {
-        if (errors.length === 0) { this.props.saveMethod(this.props.token, values) }
+        if (errors.length === 0) { 
+            this.props.saveMethod(this.props.token, values) 
+            this.form && this.form.reset();
+        }
     }
     // This Method Handel Put Actions for Executing
     handelPutSubmit = (event, errors, values) => {
@@ -48,7 +50,7 @@ export default class FormUI extends Component {
             <Col >
                 <Card >
                     <Card.Body>
-                        <AvForm onSubmit={this.handelPostSubmit}>
+                        <AvForm onSubmit={this.handelPostSubmit}  ref={c => (this.form = c)}>
                             {this.props.fields && this.props.fields.map((field, key) => {
                                 return <AvField
                                     key={key}
@@ -74,7 +76,7 @@ export default class FormUI extends Component {
                 <thead>
                     <tr>
                         <th>Sr. No</th>
-                        {this.props.fields && this.props.fields.map((field, key) => { return <th>{field.label && field.label}</th> })}
+                        {this.props.fields && this.props.fields.map((field, key) => { return <th key={key}>{field.label && field.label}</th> })}
                         <th colSpan={2}></th>
                     </tr>
                 </thead>
@@ -87,7 +89,7 @@ export default class FormUI extends Component {
         let primaryKey = this.props.primaryKey;
         let rows = data.map((singleRow, key) => {
             return <tr key={key}>
-                <td>{key}</td>
+                <td>{key+1}</td>
                 {this.props.fields && this.props.fields.map((field, key) => {
                     return <td key={key}>{singleRow[field.apiKey]}</td>
                 })}
@@ -119,7 +121,7 @@ export default class FormUI extends Component {
                 </ModalHeader>
                 <ModalBody>
                 <Container  className="justify-content-md-center">
-                        <AvField type="hidden" name="foId" value={data[0][primaryKey]} required />
+                        <AvField type="hidden" name={primaryKey} value={data[0][primaryKey]} required />
                         {this.props.fields && this.props.fields.map((field, key) => {
                             let fkey = field.apiKey && field.apiKey;
                             return  <Row key={key} xs={5}><AvField
