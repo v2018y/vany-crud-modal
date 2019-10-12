@@ -1,6 +1,7 @@
 # vany-crud-modal
 
-> This is crud Modal provide you to create simple Form UI with all crud opertions.
+> This library help you to design simple form UI with all crud opertions.
+> if you want more informations please visit http://vany.is-best.net/ and contact us.
 
 [![NPM](https://img.shields.io/npm/v/vany-crud-modal.svg)](https://www.npmjs.com/package/vany-crud-modal) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
@@ -18,7 +19,12 @@ import React, { Component } from 'react'
 import FormUI from 'vany-crud-modal'
 
 class Example extends Component {
-    state = { DemoData:[]}
+    state = { 
+      DemoData:[],
+      // if you want to show alert message declare this variable in your state
+      color:'',  
+      message:''  
+    }
     // The fileds you passed will be created automatically.
     const formFields=[
         {
@@ -42,6 +48,9 @@ class Example extends Component {
       componentName="The name of your component to be displayed Header"
       stateData={this.state.DemoData}
       primaryKey="the primary key of your API response data"
+      // if you want to show diffrent type of alert message then pass this props.
+      alertColor={this.state.color}
+      alertMessage={this.state.message}
       />
     
   }

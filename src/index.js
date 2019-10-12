@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Table, Button, Container, Row, Col, Card } from 'react-bootstrap';
 import { AvField, AvForm } from "availity-reactstrap-validation";
-import { FormGroup, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
+import { FormGroup, Modal, ModalBody, ModalHeader, ModalFooter, Alert } from "reactstrap";
 
 
 export default class FormUI extends Component {
@@ -39,6 +39,7 @@ export default class FormUI extends Component {
     render() {
         return <Container>
             <h1>{this.props.componentName && this.props.componentName}</h1>
+            {this.props.alertColor && <Alert color={this.props.alertColor}>{this.props.alertMessage}</Alert>}
             {this.loadFormUI()}
             {this.loadFormTabel()}
             {(this.state.updateModel || this.state.deleteModel) && this.loadDelEditModal()}

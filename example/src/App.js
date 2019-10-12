@@ -5,7 +5,9 @@ export default class App extends Component {
   constructor(props){
     super(props);
     this.state={
-      customerData:[]
+      customerData:[],
+      color:'',
+      message:''
     }
   }
   render () {
@@ -25,6 +27,8 @@ export default class App extends Component {
   componentName="Customer"
   stateData={this.state.customerData}
   primaryKey="cId"
+  alertColor={this.state.color}
+  alertMessage={this.state.message}
   /></Container> 
   }
 
@@ -37,7 +41,10 @@ export default class App extends Component {
   saveCust=(token,values)=>{
     console.log("Data", values);
     var joined = this.state.customerData.concat(values);
-    this.setState({ customerData: joined })
+    this.setState({ customerData: joined , color:'success', message:'Data inserted successfully'})
+    setTimeout(()=>{
+      this.setState({ color:'', message:''})
+    },500)
   }
   updateCust=(token,values)=>{
     console.log("Data", values);
