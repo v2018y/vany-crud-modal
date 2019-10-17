@@ -22,12 +22,7 @@ export class DataTable extends Component{
         this.$el.DataTable({
             retrieve: true,
             data: this.props.data,
-            columns:[
-                {title: "Sr No"},
-                {title: "Name"},
-                {title: "Surname"},
-                {title: "Email"}
-            ],
+            columns: this.props.coloums,
             "deferRender": true,
             "lengthMenu": [ [3, 5, 10, 50, -1], [3, 5, 10, 50, "All"] ],
             "pageLength": 5

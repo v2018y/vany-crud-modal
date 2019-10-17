@@ -41,7 +41,7 @@ export default class FormUI extends Component {
         return <Container>
             <h1>{this.props.componentName && this.props.componentName}</h1>
             {this.props.alertColor && <Alert color={this.props.alertColor}>{this.props.alertMessage}</Alert>}
-            {this.loadFormUI()}
+            {this.loadFormUI()} <br/>
             {this.loadFormTabel()}
             {(this.state.updateModel || this.state.deleteModel) && this.loadDelEditModal()}
         </Container>;
@@ -73,21 +73,12 @@ export default class FormUI extends Component {
     }
     // This Method Loading Showing Foods
     loadFormTabel = () => {
-        console.log("1")
-        return (
-            // <Table responsive="sm">
-            //     <thead>
-            //         <tr>
-            //             <th>Sr. No</th>
-            //             {this.props.fields && this.props.fields.map((field, key) => { return <th key={key}>{field.label && field.label}</th> })}
-            //             <th colSpan={2}></th>
-            //         </tr>
-            //     </thead>
-            //     {(this.props.stateData && this.props.stateData.length > 0) && <tbody>{this.loadTabelRows(this.props.stateData)}</tbody>}
-            // </Table>
-            (this.props.stateData && this.props.stateData.length > 0) && <DataTable data={this.loadTabelRows(this.props.stateData)}>
-            </DataTable>
-        );
+            if(this.props.stateData && this.props.stateData.length > 0) {
+                // This fetching columns dynamically
+                let coloums= this.props.fields && this.props.fields.map((field, key) => {return {title: field.label} })
+                coloums.unshift({title: "Sr No"});
+                return  <DataTable data={this.loadTabelRows(this.props.stateData)} coloums={coloums}></DataTable>
+            }
     };
     // This method return the no of Rows in load tbeel form API result
     loadTabelRows = (data) => {
@@ -112,7 +103,6 @@ export default class FormUI extends Component {
             return temp;
             
         });
-        console.log("Data ",rows.flat())
         return rows.flat();
     }
     // This Method Load the Edit and Update Modal for Item
