@@ -32,6 +32,12 @@ export default class App extends Component {
   /></Container> 
   }
 
+  loadClearMsg=()=>{
+    setTimeout(()=>{
+      this.setState({ color:'', message:''})
+    },500)
+  }
+
   getCust=(token)=>{
     let data=[ {"cId":1,"cName":"shankar","cSurname":"Mksha","cEmail":"v@v.com"},
     {"cId":2,"cName":"mkar","cSurname":"Mksha","cEmail":"v@v.com"},
@@ -42,15 +48,14 @@ export default class App extends Component {
     console.log("Data", values);
     var joined = this.state.customerData.concat(values);
     this.setState({ customerData: joined , color:'success', message:'Data inserted successfully'})
-    setTimeout(()=>{
-      this.setState({ color:'', message:''})
-    },500)
+    this.loadClearMsg()
   }
   updateCust=(token,values)=>{
     console.log("Data", values);
   }
   deleteCust=(token,values)=>{
     var filterData= this.state.customerData.filter((x)=> x.cId !== values.cId )
-    this.setState({customerData:filterData});
+    this.setState({customerData:filterData, color:'success', message:'Data Deleted successfully'});
+    this.loadClearMsg()
   }
 }

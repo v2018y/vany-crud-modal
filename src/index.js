@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Table, Button, Container, Row, Col, Card } from 'react-bootstrap';
 import { AvField, AvForm } from "availity-reactstrap-validation";
 import { FormGroup, Modal, ModalBody, ModalHeader, ModalFooter, Alert } from "reactstrap";
+import { DataTable } from './DataTabel';
 
 
 export default class FormUI extends Component {
@@ -72,33 +73,47 @@ export default class FormUI extends Component {
     }
     // This Method Loading Showing Foods
     loadFormTabel = () => {
+        console.log("1")
         return (
-            <Table responsive="sm">
-                <thead>
-                    <tr>
-                        <th>Sr. No</th>
-                        {this.props.fields && this.props.fields.map((field, key) => { return <th key={key}>{field.label && field.label}</th> })}
-                        <th colSpan={2}></th>
-                    </tr>
-                </thead>
-                {(this.props.stateData && this.props.stateData.length > 0) && <tbody>{this.loadTabelRows(this.props.stateData)}</tbody>}
-            </Table>
+            // <Table responsive="sm">
+            //     <thead>
+            //         <tr>
+            //             <th>Sr. No</th>
+            //             {this.props.fields && this.props.fields.map((field, key) => { return <th key={key}>{field.label && field.label}</th> })}
+            //             <th colSpan={2}></th>
+            //         </tr>
+            //     </thead>
+            //     {(this.props.stateData && this.props.stateData.length > 0) && <tbody>{this.loadTabelRows(this.props.stateData)}</tbody>}
+            // </Table>
+            (this.props.stateData && this.props.stateData.length > 0) && <DataTable data={this.loadTabelRows(this.props.stateData)}>
+            </DataTable>
         );
     };
     // This method return the no of Rows in load tbeel form API result
     loadTabelRows = (data) => {
         let primaryKey = this.props.primaryKey;
         let rows = data.map((singleRow, key) => {
-            return <tr key={key}>
-                <td>{key+1}</td>
-                {this.props.fields && this.props.fields.map((field, key) => {
-                    return <td key={key}>{singleRow[field.apiKey]}</td>
-                })}
-                <td><Button onClick={() => this.setState({ updateModel: !this.state.updateModel, id: singleRow[primaryKey] })} >Edit</Button></td>
-                <td><Button onClick={() => this.setState({ deleteModel: !this.state.deleteModel, id: singleRow[primaryKey] })}>Delete</Button></td>
-            </tr>
+            // return <tr key={key}>
+            //     <td>{key+1}</td>
+            //     {this.props.fields && this.props.fields.map((field, key) => {
+            //         return <td key={key}>{singleRow[field.apiKey]}</td>
+            //     })}
+            //     <td><Button onClick={() => this.setState({ updateModel: !this.state.updateModel, id: singleRow[primaryKey] })} >Edit</Button></td>
+            //     <td><Button onClick={() => this.setState({ deleteModel: !this.state.deleteModel, id: singleRow[primaryKey] })}>Delete</Button></td>
+            // </tr>
+
+            let index=key+1
+            let filedData= this.props.fields && this.props.fields.map((field, key) => {return  singleRow[field.apiKey]})
+            let temp=[];
+            // This line insert element first postion in array
+            filedData.unshift(index);
+            // this created new array and push them all data
+            temp.push(filedData);
+            return temp;
+            
         });
-        return rows;
+        console.log("Data ",rows.flat())
+        return rows.flat();
     }
     // This Method Load the Edit and Update Modal for Item
     loadDelEditModal = () => {
