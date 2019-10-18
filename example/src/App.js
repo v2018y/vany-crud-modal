@@ -45,8 +45,8 @@ export default class App extends Component {
     this.setState({customerData : data})
   }
   saveCust=(token,values)=>{
-    console.log("Data", values);
-    var joined = this.state.customerData.concat(values);
+    let newId=this.state.customerData[this.state.customerData.length-1].cId+1;
+    var joined = this.state.customerData.concat({"cId":newId,...values});
     this.setState({ customerData: joined , color:'success', message:'Data inserted successfully'})
     this.loadClearMsg()
   }
