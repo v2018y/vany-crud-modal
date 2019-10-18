@@ -23,16 +23,16 @@ export default class FormUI extends Component {
             $(this).on('click', function(evt){ 
                 var row = $(this).closest('tr');
                 var editData = $('.display').dataTable().fnGetData(row);
-                // console.log("Total Data Edit id ",editData[6]);
-                _.setUpdateModal(editData[6])
+                //  console.log("Total Data Edit id ",editData,editData[1]);
+                _.setUpdateModal(editData[1])
             })
         })
         $('.dt-delete').each(function () {
             $(this).on('click', function(evt){
                 var row = $(this).closest('tr');
                 var deleteData = $('.display').dataTable().fnGetData(row);
-                // console.log("Total Data Delete id ",deleteData[6]);
-                _.setDeleteModal(deleteData[6]);
+                // console.log("Total Data Delete id ",deleteData,deleteData[1]);
+                _.setDeleteModal(deleteData[1]);
             })
         })
     }
@@ -70,13 +70,15 @@ export default class FormUI extends Component {
     }
 
     render() {
+        const { componentName, alertColor, alertMessage}=this.props
+        const { updateModel, deleteModel}= this.state
         return <Container>
-            <h1>{this.props.componentName && this.props.componentName}</h1>
-            {this.props.alertColor && <Alert color={this.props.alertColor}>{this.props.alertMessage}</Alert>}
-            {this.loadFormUI()} <br/>
-
+            <h2>{componentName && componentName}</h2>
+            {alertColor && <Alert color={alertColor}>{alertMessage}</Alert>}
+            {this.loadFormUI()} <br/><br/>
+            <h4>{componentName && "List of "+componentName}</h4><br/>
             {this.loadFormTabel()}
-            {(this.state.updateModel || this.state.deleteModel) && this.loadDelEditModal()}
+            {(updateModel || deleteModel) && this.loadDelEditModal()}
         </Container>;
     }
     // This Method Load the Adding Food UI
@@ -108,10 +110,10 @@ export default class FormUI extends Component {
     loadFormTabel = () => {
         // This fetching columns dynamically
         let coloums= this.props.fields && this.props.fields.map((field, key) => {return {title: field.label} })
+        coloums.unshift({title:'',visible: false}) // This line pushing api_id colunm name with hide that column
         coloums.unshift({title: "Sr No"});  // This pushing first postion column name as Sr No.
         coloums.push({title:''})    // This line pushing empty colunm name for edit button
         coloums.push({title:''})    // This line pushing empty colunm name for delete button
-        coloums.push({title:'',visible: false}) // This line pushing api_id colunm name with hide that column
         // This condtion check whether data is there or not according to that DataTabel Loading
         return this.props.stateData && this.props.stateData.length > 0 ? 
                  <DataTable data={this.loadTabelRows(this.props.stateData)} coloums={coloums}></DataTable> 
@@ -127,14 +129,14 @@ export default class FormUI extends Component {
             let filedData= fields && fields.map((field, key) => {return  singleRow[field.apiKey]})
             // This is initlized the basic array for the last all data push into
             let temp=[];
+            // This pushing actual id came form api for this row
+            filedData.unshift(singleRow[primaryKey]);
             // This line insert element first postion in array
             filedData.unshift(index);
             // This pushing Edit button for this row
             filedData.push("<button type='button'  class='btn btn-primary btn-xs dt-edit' style='margin-right:16px;'>Edit</button>")
             // This pushing Delete button for this row
             filedData.push("<button type='button' class='btn btn-danger btn-xs dt-delete' style='margin-right:16px;'>Delete</button>")
-            // This pushing actual id came form api for this row
-            filedData.push(singleRow[primaryKey]);
             // this created new array and push them all data
             temp.push(filedData);
             return temp;

@@ -24,7 +24,7 @@ export default class App extends Component {
   updateMethod={this.updateCust}
   deleteMethod={this.deleteCust}
   fields={filed}
-  componentName="Customer"
+  componentName="Customers"
   stateData={this.state.customerData}
   primaryKey="cId"
   alertColor={this.state.color}
@@ -51,7 +51,17 @@ export default class App extends Component {
     this.loadClearMsg()
   }
   updateCust=(token,values)=>{
-    console.log("Data", values);
+    let filterData=this.state.customerData.filter(item=>item.cId===values.cId)
+    filterData.map(item=>{
+      item.cName= values.cName;
+      item.cSurname= values.cSurname;
+      item.cEmail= values.cEmail;
+      return 0;
+    })
+    let tempData=this.state.customerData.filter(item=>item.cId!==values.cId);
+    tempData.push(filterData[0]);
+    this.setState({customerData: tempData, color:'success', message:'Data Updated successfully'})
+    this.loadClearMsg()
   }
   deleteCust=(token,values)=>{
     var filterData= this.state.customerData.filter((x)=> x.cId !== values.cId )
