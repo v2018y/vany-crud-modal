@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { Table, Button, Container, Row, Col, Card } from 'react-bootstrap';
 import { AvField, AvForm } from "availity-reactstrap-validation";
 import { FormGroup, Modal, ModalBody, ModalHeader, ModalFooter, Alert } from "reactstrap";
-
+import { DataTable } from './DataTabel';
+// This importing Jquery in react.
+const $ =require('jquery');
 
 export default class FormUI extends Component {
     state = {
@@ -14,6 +16,37 @@ export default class FormUI extends Component {
     componentDidMount = () => {
         this.props.getMethod && this.props.getMethod(this.props.token)
     }
+    // This functions checking any Edit and Delete button onclick called or not.
+    componentDidUpdate=()=>{
+        var _ = this;
+        $('.dt-edit').each(function () {
+            $(this).on('click', function(evt){ 
+                var row = $(this).closest('tr');
+                var editData = $('.display').dataTable().fnGetData(row);
+                //  console.log("Total Data Edit id ",editData,editData[1]);
+                _.setUpdateModal(editData[1])
+            })
+        })
+        $('.dt-delete').each(function () {
+            $(this).on('click', function(evt){
+                var row = $(this).closest('tr');
+                var deleteData = $('.display').dataTable().fnGetData(row);
+                // console.log("Total Data Delete id ",deleteData,deleteData[1]);
+                _.setDeleteModal(deleteData[1]);
+            })
+        })
+    }
+
+    // This function seting id and value of state variable for opening edit modal
+    setUpdateModal=(id)=>{
+        this.setState({ updateModel: !this.state.updateModel, id})
+    }
+
+    // This function seting id and value of state variable for opening delete modal
+    setDeleteModal=(id)=>{
+        this.setState({ deleteModel: !this.state.deleteModel, id})
+    }
+    
     // This Method Handel Post Actions for Executing
     handelPostSubmit = (event, errors, values) => {
         if (errors.length === 0) { 
@@ -37,12 +70,15 @@ export default class FormUI extends Component {
     }
 
     render() {
+        const { componentName, alertColor, alertMessage}=this.props
+        const { updateModel, deleteModel}= this.state
         return <Container>
-            <h1>{this.props.componentName && this.props.componentName}</h1>
-            {this.props.alertColor && <Alert color={this.props.alertColor}>{this.props.alertMessage}</Alert>}
-            {this.loadFormUI()}
+            <h2>{componentName && componentName}</h2>
+            {alertColor && <Alert color={alertColor}>{alertMessage}</Alert>}
+            {this.loadFormUI()} <br/><br/>
+            <h4>{componentName && "List of "+componentName}</h4><br/>
             {this.loadFormTabel()}
-            {(this.state.updateModel || this.state.deleteModel) && this.loadDelEditModal()}
+            {(updateModel || deleteModel) && this.loadDelEditModal()}
         </Container>;
     }
     // This Method Load the Adding Food UI
@@ -72,50 +108,61 @@ export default class FormUI extends Component {
     }
     // This Method Loading Showing Foods
     loadFormTabel = () => {
-        return (
-            <Table responsive="sm">
-                <thead>
-                    <tr>
-                        <th>Sr. No</th>
-                        {this.props.fields && this.props.fields.map((field, key) => { return <th key={key}>{field.label && field.label}</th> })}
-                        <th colSpan={2}></th>
-                    </tr>
-                </thead>
-                {(this.props.stateData && this.props.stateData.length > 0) && <tbody>{this.loadTabelRows(this.props.stateData)}</tbody>}
-            </Table>
-        );
+        // This fetching columns dynamically
+        let coloums= this.props.fields && this.props.fields.map((field, key) => {return {title: field.label} })
+        coloums.unshift({title:'',visible: false}) // This line pushing api_id colunm name with hide that column
+        coloums.unshift({title: "Sr No"});  // This pushing first postion column name as Sr No.
+        coloums.push({title:''})    // This line pushing empty colunm name for edit button
+        coloums.push({title:''})    // This line pushing empty colunm name for delete button
+        // This condtion check whether data is there or not according to that DataTabel Loading
+        return this.props.stateData && this.props.stateData.length > 0 ? 
+                 <DataTable data={this.loadTabelRows(this.props.stateData)} coloums={coloums}></DataTable> 
+                 : <DataTable data='' coloums={coloums}></DataTable>
     };
     // This method return the no of Rows in load tbeel form API result
     loadTabelRows = (data) => {
-        let primaryKey = this.props.primaryKey;
+        const {primaryKey, fields }=this.props
         let rows = data.map((singleRow, key) => {
-            return <tr key={key}>
-                <td>{key+1}</td>
-                {this.props.fields && this.props.fields.map((field, key) => {
-                    return <td key={key}>{singleRow[field.apiKey]}</td>
-                })}
-                <td><Button onClick={() => this.setState({ updateModel: !this.state.updateModel, id: singleRow[primaryKey] })} >Edit</Button></td>
-                <td><Button onClick={() => this.setState({ deleteModel: !this.state.deleteModel, id: singleRow[primaryKey] })}>Delete</Button></td>
-            </tr>
+            // This showing Serail No for tabel
+            let index=key+1
+            // This geting acctual data form api responsed
+            let filedData= fields && fields.map((field, key) => {return  singleRow[field.apiKey]})
+            // This is initlized the basic array for the last all data push into
+            let temp=[];
+            // This pushing actual id came form api for this row
+            filedData.unshift(singleRow[primaryKey]);
+            // This line insert element first postion in array
+            filedData.unshift(index);
+            // This pushing Edit button for this row
+            filedData.push("<button type='button'  class='btn btn-primary btn-xs dt-edit' style='margin-right:16px;'>Edit</button>")
+            // This pushing Delete button for this row
+            filedData.push("<button type='button' class='btn btn-danger btn-xs dt-delete' style='margin-right:16px;'>Delete</button>")
+            // this created new array and push them all data
+            temp.push(filedData);
+            return temp;
         });
-        return rows;
+        return rows.flat();
     }
     // This Method Load the Edit and Update Modal for Item
     loadDelEditModal = () => {
-        let primaryKey = this.props.primaryKey
-        let data = this.props.stateData.filter(data => data[primaryKey] === this.state.id);
-        let headername = this.state.updateModel ? `Edit ${this.props.componentName}` : `Delete ${this.props.componentName}`;
-        let openVarible = this.state.updateModel ? this.state.updateModel : this.state.deleteModel;
-        let buttonText = this.state.updateModel ? `Edit ${this.props.componentName}` : `Delete ${this.props.componentName}`;
-        let closeStateVariableName = this.state.updateModel ? { updateModel: !this.state.updateModel } : { deleteModel: !this.state.deleteModel };
-        let variantColor = this.state.updateModel ? "outline-success" : "outline-danger";
-        let handelMethod = this.state.updateModel ? this.handelPutSubmit : this.handelDeleteSubmit
-        return <Modal
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-            isOpen={openVarible}
-        >
+        const { primaryKey, stateData, componentName }=this.props
+        const { id, updateModel, deleteModel, }=this.state
+        // This line filter data accordign what id have in state variable.
+        let data = stateData.filter(data => data[primaryKey] === id);
+        // This line Seting header text
+        let headername = updateModel ? `Edit ${componentName}` : `Delete ${componentName}`;
+        // this is seting value for opening modal
+        let openVarible = updateModel ? updateModel : deleteModel;
+        // This line seting button text according to state modal variable
+        let buttonText = updateModel ? `Edit ${componentName}` : `Delete ${componentName}`;
+        // This line seting value of cancle button functions
+        let closeStateVariableName = updateModel ? { updateModel: !this.state.updateModel } : { deleteModel: !this.state.deleteModel };
+        // This is seting of button color
+        let variantColor = updateModel ? "outline-success" : "outline-danger";
+        // after successfully click which method need to call this line seting that function
+        let handelMethod = updateModel ? this.handelPutSubmit : this.handelDeleteSubmit
+        
+        return <Modal size="lg" aria-labelledby="contained-modal-title-vcenter" centered isOpen={openVarible} >
             <AvForm onSubmit={handelMethod}>
                 <ModalHeader>
                     <strong id="contained-modal-title-vcenter"> {headername} </strong>
